@@ -1,5 +1,5 @@
 # GenesisZ
-Zcash (forks) genesis block mining script. Runs an external miner for finding valid Equihash solutions.
+HUSH genesis block mining script. Runs an external miner for finding valid Equihash solutions.
 Inspired by [GenesisH0](https://github.com/lhartikk/GenesisH0), but written from scratch.
 
 ## Features
@@ -11,7 +11,7 @@ Inspired by [GenesisH0](https://github.com/lhartikk/GenesisH0), but written from
 ## Getting started
 Clone this repo, create a **python 3** virtualenv and install dependencies with pip:
 ```bash
-git clone --recursive https://github.com/sebastianst/GenesisZ
+git clone --recursive https://github.com/FireMartZ/GenesisZ
 python3 -m venv GenesisZ
 cd GenesisZ
 source bin/activate
@@ -23,14 +23,18 @@ Make sure you have a working and supported equihash solver. Currently, only the 
 Note that the zcashlib is used as a submodule, since I haven't uploaded it to PyPI yet (and because it's easier for the current interdependent development). That's why you must use the `--recursive` flag during cloning. When you update this repo, don't forget to update the submodule as well, i.e., run `git pull && git submodule update` to update.
 
 ## Examples
-#### Zcash mainnet
-Mine the zcash mainnet gensis block by calling
+#### HUSH
+Mine the hush mainnet gensis block by calling (cheating because we know the right nonce):
 ```bash
-./genesis.py -s "/path/to/sa-solver --nonces 4000 -i" -t 1477641360
+./genesis.py -c mainnet -s '../equihash/equi1 -p 34 -s -n 302317566 -r 9 -x' -v -t 1479401611 -b 0x1f07ffff -Z Zdashe540ecf100001889836c7d491a2f44e6bc6076d59e5e317255946b71be3fc516 -p 04678afdb0fe5548271967f1a67130b7105cd6a828e03909a67962e0ea1f61deb649f6bc3f4cef38c4f35504e51ec112de5c384df7ba0b8d578a4c702b6bf11d5f
 ```
-or cheat, because you already know the right nonce:
+testnet block:
 ```bash
-./genesis.py -s "/path/to/sa-solver --nonces 1 -i" -n 1257 -t 1477641360
+./genesis.py -c testnet -s '../equihash/equi1 -p 27 -s -n 5 -r 9 -x' -v -t 1506883264 -b 0x2007ffff -E 0x1f07ffff -Z Zdashe540ecf100001889836c7d491a2f44e6bc6076d59e5e317255946b71be3fc516 -p 04678afdb0fe5548271967f1a67130b7105cd6a828e03909a67962e0ea1f61deb649f6bc3f4cef38c4f35504e51ec112de5c384df7ba0b8d578a4c702b6bf11d5f
+```
+regtest block:
+```bash
+./genesis.py -c regtest -s '../equihash/eq4851 -p 27 -s -n 0000 -r 100000 -x' -v -t 1519568466 -b 0x200f0f0f -E 0x1f07ffff -Z Zdashe540ecf100001889836c7d491a2f44e6bc6076d59e5e317255946b71be3fc516 -p 04678afdb0fe5548271967f1a67130b7105cd6a828e03909a67962e0ea1f61deb649f6bc3f4cef38c4f35504e51ec112de5c384df7ba0b8d578a4c702b6bf11d5f
 ```
 
 ## Usage
