@@ -193,6 +193,8 @@ async def findValidSolution(eh, solverCmd):
             for sol in sols:
                 if IsValidSolution(eh, nonce, sol):
                     return (sol, nonce)
+            if solver.returncode != None:
+                break
     finally:
         solver.terminate()
         await solver.communicate() # .wait() would deadlock if pipe is full
@@ -203,24 +205,33 @@ async def eatBanner(solver):
     async for line in solver.stdout:
         banner += stri(line) + '\n'
         # Last line before solutions pop up in sa-sovlver
-        if line.startswith(b'Running'):
+        if line.startswith(b'Using'):
             break
     verb(banner)
 
 async def parseSolutions(solver):
     sols, line, sol_size = [], '', GetSolutionSize()
+    nextValid = False
     async for line in solver.stdout:
         line = stri(line)
         if line.startswith('Nonce'):
             break
-        if line.startswith('Total'):
+        if line.startswith('Total') or line.find('total solutions') != -1:
             raise SolverStopped('Solver stopped before valid solution found.')
-        assert len(line) == sol_size*2, \
-                "Solver returned unexpected solution of size != %i:\n%s" %\
-                (sol_size, line)
-        sols.append(x(line))
-    _, nonce, solc, _ = line.split()
-    nonce = x(nonce[:-1]) # TODO or lx?
+        if nextValid:
+            assert len(line) == sol_size*2, \
+                "Solver returned unexpected solution of size != %i:\n%s [%i]" %\
+                (sol_size, line, len(line))
+            sols.append(x(line))
+            nextValid = False
+        if line.startswith('Encoded'):
+            nextValid = True
+        else:
+            nextValid = False
+    nonce = x('00'*32)
+    if len(sols) > 0 :
+        _, nonce, solc, _ = line.split()
+        nonce = x(nonce) # TODO or lx?
 
     return (nonce, sols)
 
