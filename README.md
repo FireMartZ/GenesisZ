@@ -17,7 +17,7 @@ cd GenesisZ
 source bin/activate
 pip install -r requirements.txt
 ```
-Make sure you have a working and supported equihash solver. Currently, only the [silent army](https://github.com/mbevand/silentarmy) solver is supported.
+Make sure you have a working and supported equihash solver. Currently, only (a slightly modified) [tromp's solver](https://github.com/FireMartZ/equihash) solver is supported.
 
 #### python-zcashlib submodule
 Note that the zcashlib is used as a submodule, since I haven't uploaded it to PyPI yet (and because it's easier for the current interdependent development). That's why you must use the `--recursive` flag during cloning. When you update this repo, don't forget to update the submodule as well, i.e., run `git pull && git submodule update` to update.
